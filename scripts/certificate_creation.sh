@@ -1,10 +1,10 @@
 #!/bin/bash
 
-IP="192.168.178.123"
-SUBJECT_CA="/C=SE/ST=Stockholm/L=Stockholm/O=himinds/OU=CA/CN=$IP"
-SUBJECT_SERVER="/C=SE/ST=Stockholm/L=Stockholm/O=himinds/OU=MQTTServer/CN=$IP"
-SUBJECT_CLIENT="/C=SE/ST=Stockholm/L=Stockholm/O=himinds/OU=MQTTClient/CN=$IP"
-SUBJECT_UPDATE="/C=SE/ST=Stockholm/L=Stockholm/O=himinds/OU=UPDATEServer/CN=$IP"
+IP="51.79.251.117"
+SUBJECT_CA="/C=VN/ST=TN/L=PY/O=Katanablu/OU=CA/CN=$IP"
+SUBJECT_SERVER="/C=VN/ST=TN/L=PY/O=Katanablu/OU=MQTTServer/CN=$IP"
+SUBJECT_CLIENT="/C=VN/ST=TN/L=PY/O=Katanablu/OU=MQTTClient/CN=$IP"
+SUBJECT_UPDATE="/C=VN/ST=TN/L=PY/O=Katanablu/OU=UPDATEServer/CN=$IP"
 
 function create_folders (){
    mkdir ~/esp/secure_esp/ca
@@ -32,11 +32,15 @@ function generate_client () {
    openssl x509 -req -sha256 -in ~/esp/secure_esp/ca/req/client.csr -CA ~/esp/secure_esp/ca/certs/ca.crt -CAkey ~/esp/secure_esp/ca/keys/ca.key -CAcreateserial -out ~/esp/secure_esp/ca/certs/client.crt -days 365
 }
 
+echo "Starting gen update_cert"
+
 function generate_update () {
    echo "$SUBJECT_UPDATE"
    openssl req -newkey rsa:2048 -subj "$SUBJECT_CLIENT" -days 60 -nodes -keyout ~/esp/secure_esp/ca/keys/update_key.pem -out ~/esp/secure_esp/ca/req/update_req.pem
    openssl x509 -req -in ~/esp/secure_esp/ca/req/update_req.pem -CA ~/esp/secure_esp/ca/certs/ca.crt -CAkey ~/esp/secure_esp/ca/keys/ca.key -CAcreateserial -out ~/esp/secure_esp/ca/certs/update_cert.pem
 }
+
+echo "Done generate cert"
 
 function copy_keys_to_esp_folders () {
    cp ~/esp/secure_esp/ca/certs/update_cert.pem ~/esp/secure_esp/main/ota_certs/update_cert.pem
