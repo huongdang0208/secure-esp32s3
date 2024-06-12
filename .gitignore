@@ -1,9 +1,6 @@
-*.pem
-*.key
-*.crt
+
 sdkconfig.old
 build/
 backup/
-ca/
 .vscode
 
