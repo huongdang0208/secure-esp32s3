@@ -235,3 +235,4 @@ If following error message occurs it is helpfull to press the Boot button on the
 
 
 
+# secure-esp32s3
